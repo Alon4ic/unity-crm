@@ -1,0 +1,38 @@
+{
+    "Home": {
+        "title": "CRM for small and medium businesses"
+    },
+    "Header": {
+        "login": "Login",
+        "register": "Register",
+        "home": "Home",
+        "features": "Features",
+        "pricing": "Pricing",
+        "download": "Download",
+        "contacts": "Contacts",
+        "start": "Start"
+    },
+    "Nav": {
+        "home": "Home",
+        "dashboard": "Dashboard",
+        "pricing": "Pricing",
+        "download": "Download",
+        "contacts": "Contacts"
+    },
+    "auth": {
+        "title_login": "Login",
+        "title_register": "Register",
+        "email": "Email",
+        "password": "Password",
+        "first_name": "First Name",
+        "last_name": "Last Name",
+        "login": "Log In",
+        "register": "Register",
+        "switch_to_register": "Don't have an account? Register",
+        "switch_to_login": "Already have an account? Log in",
+        "error_email": "Enter a valid email",
+        "error_password": "Minimum 6 characters",
+        "login_google": "Login with Google",
+        "signup_google": "Register via Google"
+    }
+}

@@ -1,0 +1,26 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./local.db"
+}
+
+model Product {
+  id        Int      @id @default(autoincrement())
+  code      String?  // Код товара (опционально)
+  name      String   // Название товара
+  unit      String   // Единица измерения ("шт", "кг", "л" и т.д.)
+  price     Float    // Цена за единицу
+  quantity  Int      // Количество на складе
+  synced    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

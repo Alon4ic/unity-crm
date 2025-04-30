@@ -1,0 +1,38 @@
+{
+    "Home": {
+        "title": "CRM для малого та середнього бізнесу"
+    },
+    "Header": {
+        "login": "Ввійти",
+        "register": "Реєстрація",
+        "home": "Головна",
+        "features": "Про продукт",
+        "pricing": "Ціни",
+        "download": "Завантажити",
+        "contacts": "Контакти",
+        "start": "Розпочати"
+    },
+    "Nav": {
+        "home": "Головна",
+        "dashboard": "Панель керування",
+        "pricing": "Ціни",
+        "download": "Завантажити",
+        "contacts": "Контакти"
+    },
+    "auth": {
+        "title_login": "Вхід",
+        "title_register": "Реєстрація",
+        "email": "Эл. пошта",
+        "password": "Пароль",
+        "first_name": "Им'я",
+        "last_name": "Прізвище",
+        "login": "Увійти",
+        "register": "Зареєструватися",
+        "switch_to_register": "Нема аккаунта? Зареєструйтесь",
+        "switch_to_login": "Вже маєте аккаунт? Ввійти",
+        "error_email": "Введіть коректний email",
+        "error_password": "Мінімум 6 символів",
+        "login_google": "Увійти через Google",
+        "signup_google": "Зареєструватися через Google"
+    }
+}
