@@ -1,22 +1,50 @@
-// src/app/api/sync-products/route.ts
-
 import { NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { supabaseAdmin } from '@/lib/supabase/admin';
+import prisma from '@/lib/prisma';
 
 export async function POST() {
-    const supabase = await createSupabaseServerClient();
+    try {
+        // Получаем все товары, которые ещё не синхронизированы
+        const unsyncedProducts = await prisma.product.findMany({
+            where: { synced: false },
+        });
 
-    // Здесь ваша логика синхронизации:
-    const { data, error } = await supabase.from('products').select('*'); // Пример, можно заменить на вашу sync-логику
+        if (!unsyncedProducts.length) {
+            return NextResponse.json({
+                message: 'Нет новых товаров для синхронизации',
+            });
+        }
 
-    if (error) {
-        console.error('Ошибка при получении продуктов:', error);
-        return NextResponse.json(
-            { success: false, error: error.message },
-            { status: 500 }
-        );
+        const inserts = unsyncedProducts.map((p) => ({
+            id: p.id,
+            name: p.name,
+            code: p.code,
+            unit: p.unit,
+            price: p.price,
+            quantity: p.quantity,
+        }));
+
+        const { error } = await supabaseAdmin.from('products').insert(inserts);
+
+        if (error) {
+            console.error('Ошибка Supabase:', error);
+            return NextResponse.json({ error }, { status: 500 });
+        }
+
+        // Отмечаем как синхронизированные
+        await prisma.product.updateMany({
+            where: {
+                id: { in: unsyncedProducts.map((p) => p.id) },
+            },
+            data: { synced: true },
+        });
+
+        return NextResponse.json({
+            message: 'Синхронизация завершена',
+            count: inserts.length,
+        });
+    } catch (error) {
+        console.error('Ошибка при синхронизации:', error);
+        return NextResponse.json({ error }, { status: 500 });
     }
-
-    // Вернём результат
-    return NextResponse.json({ success: true, data });
 }

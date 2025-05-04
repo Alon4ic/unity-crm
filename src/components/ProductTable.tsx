@@ -1,46 +1,51 @@
-import { Product } from "@/app/hooks/useProducts";
+'use client';
 
+interface ProductTableProps {
+    products: any[];
+}
 
-export const ProductTable = ({ products }: { products: Product[] }) => {
-    if (products.length === 0)
-        return <div className="text-center p-6 text-gray-500">Нет товаров</div>;
+export default function ProductTable({ products }: ProductTableProps) {
+    const total = products.reduce(
+        (sum, p) => sum + (p.price || 0) * (p.quantity || 0),
+        0
+    );
 
     return (
-        <div className="overflow-x-auto mb-8">
-            <table className="w-full border-collapse">
-                <thead className="bg-gray-100">
-                    <tr>
-                        <th className="p-3 text-left">#</th>
-                        <th className="p-3 text-left">Код</th>
-                        <th className="p-3 text-left">Название</th>
-                        <th className="p-3 text-left">Ед. изм.</th>
-                        <th className="p-3 text-right">Цена</th>
-                        <th className="p-3 text-right">Кол-во</th>
-                        <th className="p-3 text-right">Сумма</th>
+        <table className="w-full border text-sm mb-8">
+            <thead className="bg-gray-100 dark:bg-gray-800">
+                <tr>
+                    <th className="border p-2">#</th>
+                    <th className="border p-2">Код</th>
+                    <th className="border p-2">Название</th>
+                    <th className="border p-2">Единица</th>
+                    <th className="border p-2">Количество</th>
+                    <th className="border p-2">Цена</th>
+                    <th className="border p-2">Стоимость</th>
+                </tr>
+            </thead>
+            <tbody>
+                {products.map((product, idx) => (
+                    <tr key={product.id}>
+                        <td className="border p-2 text-center">{idx + 1}</td>
+                        <td className="border p-2">{product.code || '-'}</td>
+                        <td className="border p-2">{product.name}</td>
+                        <td className="border p-2">{product.unit}</td>
+                        <td className="border p-2">{product.quantity}</td>
+                        <td className="border p-2">{product.price}</td>
+                        <td className="border p-2 font-semibold">
+                            {(product.quantity * product.price).toFixed(2)}
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    {products.map((p, i) => (
-                        <tr key={p.id} className="hover:bg-gray-50">
-                            <td className="p-3 border-t">{i + 1}</td>
-                            <td className="p-3 border-t">{p.code ?? '-'}</td>
-                            <td className="p-3 border-t font-medium">
-                                {p.name}
-                            </td>
-                            <td className="p-3 border-t">{p.unit}</td>
-                            <td className="p-3 border-t text-right">
-                                {p.price.toFixed(2)}
-                            </td>
-                            <td className="p-3 border-t text-right">
-                                {p.quantity}
-                            </td>
-                            <td className="p-3 border-t text-right font-medium">
-                                {(p.price * p.quantity).toFixed(2)}
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
+                ))}
+            </tbody>
+            <tfoot>
+                <tr className="bg-gray-50 dark:bg-gray-900 font-medium">
+                    <td colSpan={6} className="border p-2 text-right">
+                        Общая стоимость товаров на складе
+                    </td>
+                    <td className="border p-2 font-bold">{total.toFixed(2)}</td>
+                </tr>
+            </tfoot>
+        </table>
     );
-};
+}

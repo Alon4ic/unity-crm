@@ -1,17 +1,25 @@
 export type Locale = 'en' | 'uk' | 'ru';
+export type CustomFieldType = 'string' | 'number' | 'boolean' | 'date';
 
 export type Product = {
-    id: number;
-    name_code: string;
-    unit_id: number;
+    id: number; // если Supabase использует UUID
+    code?: string;
+    name: string;
+    unit: string;
     price: number;
     quantity: number;
-    required_quantity: number;
-    acceptable_quantity: number;
-    critical_quantity: number;
-    supplier_id: number;
+    extra_fields?: Record<string, string | number >;
+    created_at?: string;
 };
 
 
-// Тип для создания продукта (без id)
+// Типы для операций с продуктами
 export type InsertProduct = Omit<Product, 'id'>;
+export type UpdateProduct = Partial<Product>;
+
+// Тип для работы с кастомными полями
+export interface CustomFieldConfig {
+    name: string;
+    type: CustomFieldType;
+    defaultValue?: unknown;
+}

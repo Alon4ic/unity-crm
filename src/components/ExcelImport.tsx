@@ -1,99 +1,130 @@
 'use client';
-import { useState } from 'react';
-import ExcelJS from 'exceljs';
-import { addProduct } from '@/services/products';
 
-// Определяем интерфейс для структуры строки из Excel
-interface ProductRow {
-    name_code: string;
-    unit_id: number;
-    price: number;
-    quantity: number;
-    acceptable_quantity: number;
-    critical_quantity: number;
-    required_quantity: number;
+import { ProductField, fieldMapping } from '@/constans/importFieldMapping';
+import { useRef, useState } from 'react';
+import * as XLSX from 'xlsx';
+import Spinner from '@/components/ui/Spinner';
+
+interface ExcelImportProps {
+    onImport: () => void;
 }
 
-const ExcelImport = () => {
-    const [error, setError] = useState<string | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
+export default function ExcelImport({ onImport }: ExcelImportProps) {
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [loading, setLoading] = useState(false);
 
-    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
-        if (!file) {
-            setError('Файл не выбран');
-            return;
-        }
+        if (!file) return;
 
-        setIsLoading(true);
-        setError(null);
+        setLoading(true);
+        const reader = new FileReader();
 
-        try {
-            // Чтение файла с помощью FileReader
-            const buffer = await file.arrayBuffer();
-            const workbook = new ExcelJS.Workbook();
-            await workbook.xlsx.load(buffer);
-
-            // Получаем первый лист
-            const worksheet = workbook.worksheets[0];
-            if (!worksheet) {
-                throw new Error('Лист не найден в файле Excel');
-            }
-
-            // Преобразуем строки в массив объектов
-            const jsonData: ProductRow[] = [];
-            worksheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
-                if (rowNumber === 1) return; // Пропускаем заголовок (если есть)
-
-                const rowData: ProductRow = {
-                    name_code: String(row.getCell(1).value || ''),
-                    unit_id: Number(row.getCell(2).value || 0),
-                    price: Number(row.getCell(3).value || 0),
-                    quantity: Number(row.getCell(4).value || 0),
-                    acceptable_quantity: Number(row.getCell(5).value || 0),
-                    critical_quantity: Number(row.getCell(6).value || 0),
-                    required_quantity: Number(row.getCell(7).value || 0),
-                };
-
-                jsonData.push(rowData);
+        reader.onload = async (evt) => {
+            const bstr = evt.target?.result;
+            const wb = XLSX.read(bstr, { type: 'binary' });
+            const sheetName = wb.SheetNames[0];
+            const sheet = wb.Sheets[sheetName];
+            const data = XLSX.utils.sheet_to_json<string[]>(sheet, {
+                header: 1,
             });
 
-            // Отправляем данные в addProduct
-            for (const row of jsonData) {
-                try {
-                    await addProduct(row);
-                } catch (err) {
-                    console.error(
-                        `Ошибка при добавлении продукта ${row.name_code}:`,
-                        err
+            const headers = data[0]?.map((h) =>
+                h?.toString().trim().toLowerCase()
+            );
+            if (!headers) {
+                console.error('Заголовки не найдены');
+                setLoading(false);
+                return;
+            }
+
+            const headerIndexes: Partial<Record<ProductField, number>> = {};
+            headers.forEach((header, index) => {
+                const mapped = fieldMapping[header];
+                if (mapped) headerIndexes[mapped] = index;
+            });
+
+            const products = data.slice(1).map((row, rowIndex) => {
+                const name = row[headerIndexes.name ?? -1]?.toString().trim();
+                if (!name) {
+                    console.warn(
+                        `Пропущена строка ${rowIndex + 2} — отсутствует название`
                     );
-                    setError(`Ошибка при добавлении продукта ${row.name_code}`);
+                    return null;
+                }
+
+                return {
+                    name,
+                    code:
+                        row[headerIndexes.code ?? -1]?.toString().trim() ||
+                        undefined,
+                    unit:
+                        row[headerIndexes.unit ?? -1]?.toString().trim() || '',
+                    price: parseFloat(
+                        row[headerIndexes.price ?? -1]
+                            ?.toString()
+                            .replace(',', '.') || '0'
+                    ),
+                    quantity: parseFloat(
+                        row[headerIndexes.quantity ?? -1]
+                            ?.toString()
+                            .replace(',', '.') || '0'
+                    ),
+                };
+            });
+
+            const validProducts = products.filter(Boolean) as {
+                name: string;
+                code?: string;
+                unit: string;
+                price: number;
+                quantity: number;
+            }[];
+
+            for (const product of validProducts) {
+                try {
+                    const res = await fetch('/api/import-products', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(product),
+                    });
+                    const result = await res.json();
+                    if (!result.success) {
+                        console.error(
+                            `Ошибка при импорте товара "${product.name}":`,
+                            result.error
+                        );
+                    }
+                } catch (error) {
+                    console.error(
+                        `Ошибка при импорте товара "${product.name}":`,
+                        error
+                    );
                 }
             }
 
-            if (!error) {
-                alert('Продукты успешно импортированы');
-            }
-        } catch (err) {
-            console.error('Ошибка при обработке файла:', err);
-            setError('Не удалось обработать файл Excel');
-        } finally {
-            setIsLoading(false);
-        }
+            setLoading(false);
+            onImport();
+        };
+
+        reader.readAsBinaryString(file);
     };
 
     return (
-        <div>
+        <div className="space-y-2">
             <input
                 type="file"
                 accept=".xlsx, .xls"
-                onChange={handleFileUpload}
-                disabled={isLoading}
+                ref={inputRef}
+                onChange={handleFile}
+                className="mb-2"
             />
-            {isLoading && <p>Загрузка...</p>}
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {loading && (
+                <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                    <Spinner />
+                    Импорт данных...
+                </div>
+            )}
         </div>
     );
-};
-
-export default ExcelImport;
+}

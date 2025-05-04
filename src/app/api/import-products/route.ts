@@ -1,37 +1,32 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma'; // Путь к Prisma клиенту
-import * as XLSX from 'xlsx'; // 👈 Импортируем XLSX
+import prisma from '@/lib/prisma';
+import { saveImportProduct } from '@/lib/saveImportProduct';
 
 export async function POST(req: Request) {
-    const formData = await req.formData();
-    const file = formData.get('file') as File | null;
-
-    if (!file) {
-        return NextResponse.json({ error: 'Файл не найден' }, { status: 400 });
-    }
-
-    const buffer = Buffer.from(await file.arrayBuffer()); // 👈 Преобразуем файл в буфер
-    const workbook = XLSX.read(buffer, { type: 'buffer' });
-    const sheet = workbook.Sheets[workbook.SheetNames[0]];
-    const json = XLSX.utils.sheet_to_json(sheet);
-
-    const products = json.map((item: any) => ({
-        code: item['Код'] || null,
-        name: item['Наименование'] || '',
-        unit: item['Единица'] || 'шт',
-        price: parseFloat(item['Цена'] || 0),
-        quantity: parseInt(item['Количество'] || '0', 10),
-    }));
-
     try {
-        for (const product of products) {
-            await prisma.product.create({ data: product });
-        }
-        return NextResponse.json({ success: true });
+        const body = await req.json();
+        const result = await saveImportProduct(body);
+        return NextResponse.json(result);
     } catch (error) {
-        console.error('[IMPORT PRODUCTS ERROR]', error);
+        console.error('Ошибка в POST /api/import-products:', error);
         return NextResponse.json(
-            { error: 'Ошибка при сохранении данных' },
+            { success: false, error: 'Ошибка при импорте' },
+            { status: 400 }
+        );
+    }
+}
+
+// 👇 Добавь обработку GET-запросов
+export async function GET() {
+    try {
+        const products = await prisma.product.findMany({
+            orderBy: { createdAt: 'desc' },
+        });
+        return NextResponse.json(products);
+    } catch (error) {
+        console.error('Ошибка в GET /api/import-products:', error);
+        return NextResponse.json(
+            { error: 'Ошибка загрузки товаров' },
             { status: 500 }
         );
     }

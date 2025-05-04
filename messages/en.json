@@ -14,7 +14,7 @@
     },
     "Nav": {
         "home": "Home",
-        "dashboard": "Dashboard",
+        "dashboard": "Warehouse",
         "pricing": "Pricing",
         "download": "Download",
         "contacts": "Contacts"
@@ -34,5 +34,11 @@
         "error_password": "Minimum 6 characters",
         "login_google": "Login with Google",
         "signup_google": "Register via Google"
+    },
+    "dashboard": {
+        "title": "Your warehouse",
+        "desc": "You have no products in stock",
+        "text": "You can enter the product manually or import the list from an XLSX table.",
+        "title_two": "Add item manually"
     }
 }

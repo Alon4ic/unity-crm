@@ -18,7 +18,7 @@ interface DashboardLayoutProps {
 
 const menuItems = [
     { label: 'Импорт XLSX', path: '/dashboard/products', icon: ShoppingCart },
-    { label: 'Поставщики', path: '/dashboard/suppliers', icon: Truck },
+    { label: 'Поставки', path: '/dashboard/supplies', icon: Truck },
     { label: 'Продажи', path: '/dashboard/sales', icon: BarChart2 },
     { label: 'Настройки', path: '/dashboard/settings', icon: Settings },
 ];

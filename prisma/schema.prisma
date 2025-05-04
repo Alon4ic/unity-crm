@@ -15,12 +15,13 @@ datasource db {
 }
 
 model Product {
-  id        Int      @id @default(autoincrement())
-  code      String?  // Код товара (опционально)
-  name      String   // Название товара
-  unit      String   // Единица измерения ("шт", "кг", "л" и т.д.)
-  price     Float    // Цена за единицу
-  quantity  Int      // Количество на складе
-  synced    Boolean  @default(false)
+  id       String   @id @default(uuid())
+  name     String
+  code     String?  @unique
+  unit     String
+  price    Float
+  quantity Float
+  synced   Boolean? @default(false)
   createdAt DateTime @default(now())
 }
+

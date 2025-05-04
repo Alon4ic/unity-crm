@@ -27,7 +27,10 @@
         "better-sqlite3": "^11.9.1",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
+        "dexie": "^4.0.11",
         "file-saver": "^2.0.5",
+        "framer-motion": "^12.9.4",
+        "lodash.debounce": "^4.0.8",
         "lucide-react": "^0.487.0",
         "next": "15.2.5",
         "next-intl": "^4.0.2",
@@ -47,6 +50,7 @@
     "devDependencies": {
         "@eslint/eslintrc": "^3",
         "@types/file-saver": "^2.0.7",
+        "@types/lodash.debounce": "^4.0.9",
         "@types/node": "^20",
         "@types/react": "^19",
         "@types/react-dom": "^19",
