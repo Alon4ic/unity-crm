@@ -1,50 +1,72 @@
-import { NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase/admin';
-import prisma from '@/lib/prisma';
+import { NextRequest, NextResponse } from 'next/server';
+import { createSupabaseServerClient } from '@/lib/supabase/server';
+import type { Database } from '@/types/supabase';
+import { supabase } from '@/lib/supabase';
 
-export async function POST() {
+export async function POST(req: NextRequest) {
+    // 1. Получаем локальные товары от клиента
+    let localProducts: Database['public']['Tables']['products']['Insert'][] =
+        [];
     try {
-        // Получаем все товары, которые ещё не синхронизированы
-        const unsyncedProducts = await prisma.product.findMany({
-            where: { synced: false },
-        });
-
-        if (!unsyncedProducts.length) {
-            return NextResponse.json({
-                message: 'Нет новых товаров для синхронизации',
-            });
-        }
-
-        const inserts = unsyncedProducts.map((p) => ({
-            id: p.id,
-            name: p.name,
-            code: p.code,
-            unit: p.unit,
-            price: p.price,
-            quantity: p.quantity,
-        }));
-
-        const { error } = await supabaseAdmin.from('products').insert(inserts);
-
-        if (error) {
-            console.error('Ошибка Supabase:', error);
-            return NextResponse.json({ error }, { status: 500 });
-        }
-
-        // Отмечаем как синхронизированные
-        await prisma.product.updateMany({
-            where: {
-                id: { in: unsyncedProducts.map((p) => p.id) },
-            },
-            data: { synced: true },
-        });
-
-        return NextResponse.json({
-            message: 'Синхронизация завершена',
-            count: inserts.length,
-        });
-    } catch (error) {
-        console.error('Ошибка при синхронизации:', error);
-        return NextResponse.json({ error }, { status: 500 });
+        localProducts = await req.json();
+    } catch {
+        return NextResponse.json(
+            { error: 'Неверный JSON в теле запроса' },
+            { status: 400 }
+        );
     }
+
+    // 2. Получаем товары из Supabase
+    const { data: serverProducts, error: fetchError } = await supabase
+        .from('products')
+        .select('*');
+
+    if (fetchError) {
+        return NextResponse.json(
+            { error: fetchError.message },
+            { status: 500 }
+        );
+    }
+
+    // 3. Сопоставляем структуру (опционально — если поля отличаются)
+    const serverMap = new Map(serverProducts.map((p) => [p.id, p]));
+
+    const mergedProducts: Database['public']['Tables']['products']['Insert'][] =
+        [];
+
+    for (const local of localProducts) {
+        const server = serverMap.get(local.id);
+
+        if (!server) {
+            // Новый товар — добавить
+            mergedProducts.push(local);
+        } else {
+            // Сравниваем даты обновления (если есть поле updated_at)
+            if (
+                local.updated_at &&
+                server.updated_at &&
+                new Date(local.updated_at) > new Date(server.updated_at)
+            ) {
+                mergedProducts.push(local);
+            }
+        }
+    }
+
+    // 4. Объединённые товары добавляем/обновляем через upsert
+    const { error: upsertError } = await supabase
+        .from('products')
+        .upsert(mergedProducts, { onConflict: 'id' });
+
+    if (upsertError) {
+        console.error('Ошибка при upsert:', upsertError);
+        return NextResponse.json(
+            { error: upsertError.message },
+            { status: 400 }
+        );
+    }
+
+    return NextResponse.json({
+        message: '✅ Синхронизация завершена успешно',
+        uploaded: mergedProducts.length,
+    });
 }

@@ -1,65 +1,147 @@
 @import 'tailwindcss';
 @font-face {
-  font-family: 'Playfair Display';
-  src: url('/fonts/playfair-display/PlayfairDisplay-Regular.woff2') format('woff2'),
-       url('/fonts/playfair-display/PlayfairDisplay-Regular.ttf') format('truetype'); 
+    font-family: 'Roboto';
+    src:
+        url('/fonts/roboto/Roboto_Condensed-Regular.woff2') format('woff2'),
+        url('/fonts/roboto/Roboto_Condensed-Regular.ttf') format('truetype');
 
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Roboto';
+    src:
+        url('/fonts/roboto/Roboto_Condensed-Italic.woff2') format('woff2'),
+        url('/fonts/roboto/Roboto_Condensed-Italic.ttf') format('truetype');
+
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
 }
 
 @font-face {
-  font-family: 'Playfair Display';
-  src: url('/fonts/playfair-display/PlayfairDisplay-Bold.woff2') format('woff2'),
-       url('/fonts/playfair-display/PlayfairDisplay-Bold.ttf') format('truetype');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
+    font-family: 'Roboto';
+    src:
+        url('/fonts/roboto/Roboto_Condensed-Bold.woff2') format('woff2'),
+        url('/fonts/roboto/Roboto_Condensed-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
 }
-
 @font-face {
-  font-family: 'Playfair Display';
-  src: url('/fonts/playfair-display/PlayfairDisplay-Italic.woff2') format('woff2'),
-       url('/fonts/playfair-display/PlayfairDisplay-Italic.ttf') format('truetype'); 
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
+    font-family: 'Roboto';
+    src:
+        url('/fonts/roboto/Roboto_Condensed-Medium.woff2') format('woff2'),
+        url('/fonts/roboto/Roboto_Condensed-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: medium;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Lato';
+    src:
+        url('/fonts/lato/Lato-Regular.woff2') format('woff2'),
+        url('/fonts/lato/Lato-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Lato';
+    src:
+        url('/fonts/lato/Lato-Bold.woff2') format('woff2'),
+        url('/public/fonts/lato/Lato-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Roboto';
+    src:
+        url('/fonts/roboto/Roboto_Condensed-Bold.woff2') format('woff2'),
+        url('/fonts/roboto/Roboto_Condensed-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
 }
 
 :root {
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
-  --primary: 221.2 83.2% 53.3%;
-  --primary-foreground: 210 40% 98%;
-  --muted-foreground: 220 10% 40%;
+    --background: 0, 0%, 98%;
+    --foreground: 213 9.7% 10.9% / 0.95;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --muted-foreground: 220 10% 40%;
+    --bg-header: 125 29.8% 75.5% / 0.95;
+    --place: 0 0% 18%;
 }
 
 .dark {
-  --background: 222.2 84% 4.9%;
-  --foreground: 210 40% 98%;
-  --primary: 217.2 91.2% 59.8%;
-  --primary-foreground: 222.2 47.4% 11.2%;
-  --muted-foreground: 220 10% 70%;
+    --background: 0 0% 18%;
+    --foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --muted-foreground: 220 10% 70%;
+    --bg-header: 216 31% 17%;
+    --place: 260 18% 87%;
 }
 
 body {
-  background: hsl(var(--background));
-  color: hsl(var(--foreground));
-  max-width: 2500px;
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+    max-width: 2500px;
+    font-family: 'Roboto', serif;
 }
 
 .loader {
-  width: 16px;
-  height: 16px;
-  border: 2px solid transparent;
-  border-top: 2px solid white;
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
+    width: 16px;
+    height: 16px;
+    border: 2px solid transparent;
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
 }
 
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+    to {
+        transform: rotate(360deg);
+    }
+}
+tr.bg-gray-100 {
+    background-color: #f7fafc;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s ease;
+}
+tr.bg-yellow-100 {
+    background-color: #fefcbf;
+    transition: background-color 0.5s ease;
+}
+tr.bg-blue-50 {
+    background-color: #eff6ff;
+}
+.cursor-move {
+    cursor: grab;
+}
+.cursor-move:active {
+    cursor: grabbing;
+}
+table {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    vertical-align: middle;
+    overflow: hidden;
+}
+
+.truncate {
+    overflow: hidden;
+    /* text-overflow: ellipsis; */
+    /* white-space: nowrap; */
+}
+.wrap {
+    white-space: wrap;
 }

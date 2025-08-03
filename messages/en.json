@@ -3,21 +3,18 @@
         "title": "CRM for small and medium businesses"
     },
     "Header": {
-        "login": "Login",
-        "register": "Register",
         "home": "Home",
-        "features": "Features",
-        "pricing": "Pricing",
+        "dashboard": "Warehouse",
+        "statistics": "Statistics",
         "download": "Download",
-        "contacts": "Contacts",
+        "sales": "Sales",
         "start": "Start"
     },
     "Nav": {
         "home": "Home",
         "dashboard": "Warehouse",
-        "pricing": "Pricing",
-        "download": "Download",
-        "contacts": "Contacts"
+        "statistics": "Statistics",
+        "sales": "Sales"
     },
     "auth": {
         "title_login": "Login",
@@ -40,5 +37,20 @@
         "desc": "You have no products in stock",
         "text": "You can enter the product manually or import the list from an XLSX table.",
         "title_two": "Add item manually"
+    },
+    "status": {
+        "online": "Online",
+        "offline": "Offline"
+    },
+    "salesPages": {
+        "title": "Sales Pages",
+        "createdAt": "Created",
+        "viewButton": "Open",
+        "createButton": "Create Page",
+        "newPagePrompt": "Enter a name for the new page (e.g. 'Redko Elena')",
+        "markup": "Markup"
+    },
+    "search": {
+        "text": "Enter the product name or code"
     }
 }

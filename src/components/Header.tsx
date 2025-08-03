@@ -10,7 +10,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Logo } from './Logo';
 import LanguageSelect from './LanguageSelect';
 import { useModalStore } from '@/store/modal';
-
+import OnlineStatusIndicator from './OnlineStatusIndicator';
 
 export const Header = () => {
     const t = useTranslations('Header');
@@ -27,8 +27,8 @@ export const Header = () => {
     };
 
     return (
-        <header className="font-playfair w-full px-6 py-4 shadow-sm backdrop-blur-md bg-background sticky top-0 z-50 transition-colors border-b border-gray-200 dark:border-gray-800">
-            <div className="flex justify-between items-center max-w-screen-xl mx-auto">
+        <header className="font-playfair w-full px-6 py-4 shadow-sm backdrop-blur-md bg-background sticky top-0 z-50 transition-colors border-b border-gray-200 dark:border-gray-800 ">
+            <div className="flex justify-between items-center max-w-screen-xl mx-auto mr-[110px]">
                 <Logo />
 
                 {/* Десктоп меню */}
@@ -36,7 +36,7 @@ export const Header = () => {
                     <Navigation />
                     <LanguageSelect />
                     <ThemeToggle />
-                    <button
+                    {/* <button
                         onClick={() => open('login')}
                         className="border border-primary text-primary hover:bg-primary hover:text-white transition-colors px-4 py-1 rounded text-sm font-medium"
                     >
@@ -47,7 +47,7 @@ export const Header = () => {
                         className="bg-primary text-white hover:bg-opacity-90 transition-colors px-4 py-1 rounded text-sm font-medium"
                     >
                         {t('register')}
-                    </button>
+                    </button> */}
                 </div>
 
                 {/* Кнопка открытия мобильного меню */}
@@ -69,6 +69,9 @@ export const Header = () => {
                 currentLocale={currentLocale}
                 changeLocale={changeLocale}
             />
+            <div>
+                <OnlineStatusIndicator />
+            </div>
         </header>
     );
 };

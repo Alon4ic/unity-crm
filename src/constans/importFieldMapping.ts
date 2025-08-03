@@ -1,6 +1,11 @@
-// src/lib/importFieldMapping.ts
-
-export type ProductField = 'name' | 'code' | 'unit' | 'price' | 'quantity';
+export type ProductField =
+    | 'name'
+    | 'code'
+    | 'unit'
+    | 'price'
+    | 'quantity'
+    | 'markup_percent' // ← добавлено
+    | 'category_id'; // ← добавлено
 
 export const fieldMapping: Record<string, ProductField> = {
     // Название
@@ -32,4 +37,16 @@ export const fieldMapping: Record<string, ProductField> = {
     количество: 'quantity',
     кількість: 'quantity',
     quantity: 'quantity',
+
+    // Наценка
+    наценка: 'markup_percent', // ← добавлено
+    'наценка %': 'markup_percent',
+    'процент наценки': 'markup_percent',
+    markup_percent: 'markup_percent',
+
+    // Категория
+    категория: 'category_id', // ← добавлено
+    категорія: 'category_id',
+    category: 'category_id',
+    category_id: 'category_id',
 };

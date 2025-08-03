@@ -6,9 +6,9 @@ import '../globals.css';
 import { Header } from '@/components/Header';
 import ThemeInitializer from '@/components/ThemeInitializer';
 import { ReactNode } from 'react';
-import { RegisterModal } from '@/components/form/RegisterForm';
 import { LoginModal } from '@/components/form/LoginModal';
 import { Toaster } from 'react-hot-toast';
+import ProductDragProvider from '@/components/providers/ProductDragProvider'; // 👈 импортируем провайдер
 
 // Генерация статических параметров для локалей
 export async function generateStaticParams() {
@@ -25,10 +25,8 @@ export default async function LocaleLayout({
     children,
     params,
 }: LocaleLayoutProps) {
-    // Разрешаем Promise для params
     const { locale } = await params;
 
-    // Проверяем, поддерживается ли локаль
     if (!hasLocale(routing.locales, locale)) {
         notFound();
     }
@@ -39,11 +37,17 @@ export default async function LocaleLayout({
                 <ThemeProvider attribute="class" defaultTheme="light">
                     <ThemeInitializer />
                     <NextIntlClientProvider locale={locale}>
-                        <RegisterModal />
-                        <LoginModal />
-                        <Header />
-                        {children}
-                        <Toaster position="top-right" reverseOrder={false} />
+                        <ProductDragProvider>
+                            {' '}
+                            {/* 👈 оборачиваем всё приложение */}
+                            <LoginModal />
+                            <Header />
+                            {children}
+                            <Toaster
+                                position="top-right"
+                                reverseOrder={false}
+                            />
+                        </ProductDragProvider>
                     </NextIntlClientProvider>
                 </ThemeProvider>
             </body>

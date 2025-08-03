@@ -3,15 +3,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const electron_1 = require("electron");
 const path_1 = __importDefault(require("path"));
+if (process.env.NODE_ENV === 'development') {
+    require('electron-reload')(__dirname, {
+        electron: path_1.default.join(__dirname, '..', 'node_modules', '.bin', 'electron'),
+        forceHardReset: true,
+        hardResetMethod: 'exit',
+    });
+}
+const electron_1 = require("electron");
 const http_1 = __importDefault(require("http"));
 const next_1 = __importDefault(require("next"));
 const dev = process.env.NODE_ENV === 'development';
 const nextDir = path_1.default.join(__dirname, '..');
 let server = null;
 async function createWindow() {
-    // УДАЛЕН БЛОК СОЗДАНИЯ ТЕСТОВОГО ТОВАРА
     // 👇 Поднимаем Next.js сервер только в dev
     if (dev) {
         const nextApp = (0, next_1.default)({ dev, dir: nextDir });

@@ -11,8 +11,8 @@ export const Navigation = () => {
     const menuItems = [
         { label: t('home'), href: '/' },
         { label: t('dashboard'), href: '/dashboard' },
-        { label: t('pricing'), href: '/pricing' },
-        { label: t('contacts'), href: '/contacts' },
+        { label: t('sales'), href: '/sales' },
+        { label: t('statistics'), href: '/statistics' },
     ];
 
     return (
@@ -24,7 +24,7 @@ export const Navigation = () => {
                         <li key={item.href}>
                             <Link
                                 href={item.href}
-                                className={`transition-all duration-300 px-2 py-1 rounded-md ${
+                                className={`transition-all duration-300 text-lg px-2 py-1 rounded-md ${
                                     isActive
                                         ? 'text-[hsl(var(--primary))] border-b-2 border-[hsl(var(--primary))]'
                                         : 'text-muted-foreground hover:text-[hsl(var(--primary))] hover:border-b hover:border-muted'

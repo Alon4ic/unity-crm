@@ -23,10 +23,9 @@ export default function MobileMenu({
 
     const menuItems = [
         { label: t('home'), href: '/' },
-        { label: t('features'), href: '/features' },
-        { label: t('pricing'), href: '/pricing' },
-        { label: t('download'), href: '/download' },
-        { label: t('contacts'), href: '/contacts' },
+        { label: t('dashboard'), href: '/dashboard' },
+        { label: t('statistics'), href: '/statistics' },
+        { label: t('sales'), href: '/sales' },
     ];
 
     // Запрет прокрутки при открытом меню

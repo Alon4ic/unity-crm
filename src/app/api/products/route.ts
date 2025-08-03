@@ -1,7 +1,7 @@
 // app/api/products/route.ts
+import { ProductInput } from '@/hooks/useImportProducts';
 import { NextResponse } from 'next/server';
-import type { ProductInput } from '@/app/hooks/useProducts';
-import prisma from '@/lib/prisma';
+
 
 // Обработчик POST (добавление товара)
 export async function POST(req: Request) {

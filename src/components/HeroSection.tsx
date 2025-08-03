@@ -21,7 +21,7 @@ export default function HeroSection() {
 
                 {/* Текстовый блок */}
                 <div className="text-center md:text-left space-y-6">
-                    <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
+                    <h1 className="font-playfair text-3xl md:text-5xl font-bold tracking-tight text-gray-900 dark:text-white">
                         Мощная CRM для вашего бизнеса
                     </h1>
                     <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300">

@@ -19,7 +19,15 @@ export default function LocalProductManager() {
 
     const addProduct = async () => {
         if (!name || !code) return;
-        await db.products.add({ name, code });
+        await db.products.add({
+            id: crypto.randomUUID(),
+            name,
+            code,
+            unit: '',
+            price: 0,
+            quantity: 0,
+            created_at: new Date().toISOString(),
+        });
         const all = await db.products.toArray();
         setProducts(all);
         setName('');

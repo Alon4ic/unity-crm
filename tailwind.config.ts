@@ -7,7 +7,7 @@ module.exports = {
         './components/**/*.{js,ts,jsx,tsx,mdx}',
         './src/**/*.{js,ts,jsx,tsx,mdx}',
     ],
-    theme: {
+    theme: { 
         animation: {
             'slide-in': 'slide-in 0.3s ease-out forwards',
         },
@@ -18,13 +18,18 @@ module.exports = {
             },
         },
         colors: {
+            'bg-header': 'hsl(var(--bg-header))',
             background: 'hsl(var(--background))',
             foreground: 'hsl(var(--foreground))',
             primary: {
                 DEFAULT: 'hsl(var(--primary))',
                 foreground: 'hsl(var(--primary-foreground))',
             },
-            // Добавьте остальные цвета по аналогии
+            place: 'hsl(var(--place))',
+        },
+        fontFamily: {
+            roboto: ['"Roboto"', 'serif'],
+            lato: ['"Lato"', 'serif'],
         },
         screens: {
             phone: '360px',
@@ -38,5 +43,6 @@ module.exports = {
             desktop: '1440px',
         },
     },
+    
     plugins: [],
 };
